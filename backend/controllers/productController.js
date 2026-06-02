@@ -84,7 +84,7 @@ const getProductById = async (req, res) => {
       });
     }
     const [products] = await pool.execute(
-      `SELECT * FROM products WHERE product_id=?`,
+      `SELECT product_id FROM products WHERE product_id=?`,
       [productId],
     );
     if (products.length === 0) {
