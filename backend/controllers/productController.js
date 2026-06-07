@@ -39,7 +39,9 @@ const createProduct = async (req, res) => {
     const productName = product_name.trim();
     const skuValue = sku.trim();
     const [existingProducts] = await pool.execute(
-      `SELECT product_id FROM products WHERE sku=?`,
+      ` SELECT product_id
+        FROM products 
+        WHERE sku = ? `,
       [skuValue],
     );
     if (existingProducts.length > 0) {
@@ -48,7 +50,8 @@ const createProduct = async (req, res) => {
       });
     }
     const [result] = await pool.execute(
-      `INSERT INTO products (product_name, sku, price, stock_quantity) VALUES (?,?,?,?)`,
+      ` INSERT INTO products (product_name, sku, price, stock_quantity)
+        VALUES (?, ?, ?, ?) `,
       [productName, skuValue, price, stock_quantity],
     );
     res.status(201).json({
@@ -65,7 +68,11 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const [products] = await pool.execute("SELECT * FROM products");
+    const [products] = await pool.execute(
+      `SELECT * 
+       FROM products
+       ORDER BY created_at `,
+    );
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
@@ -84,7 +91,9 @@ const getProductById = async (req, res) => {
       });
     }
     const [products] = await pool.execute(
-      `SELECT product_id FROM products WHERE product_id=?`,
+      ` SELECT *
+        FROM products 
+        WHERE product_id = ? `,
       [productId],
     );
     if (products.length === 0) {
@@ -145,7 +154,9 @@ const updateProduct = async (req, res) => {
     const skuValue = sku.trim();
 
     const [existingProducts] = await pool.execute(
-      `SELECT product_id FROM products WHERE sku = ? AND product_id != ?`,
+      ` SELECT product_id
+        FROM products
+        WHERE sku = ? AND product_id != ? `,
       [skuValue, productId],
     );
 
@@ -156,7 +167,9 @@ const updateProduct = async (req, res) => {
     }
 
     const [products] = await pool.execute(
-      `SELECT product_id FROM products WHERE product_id = ?`,
+      ` SELECT product_id
+        FROM products
+        WHERE product_id = ?`,
       [productId],
     );
 
@@ -166,7 +179,9 @@ const updateProduct = async (req, res) => {
       });
     }
     await pool.execute(
-      `UPDATE products SET product_name = ?,sku=?,price=?,stock_quantity=? WHERE product_id=?`,
+      ` UPDATE products
+        SET product_name = ?,sku = ?,price = ?,stock_quantity = ? 
+        WHERE product_id = ?`,
       [productName, skuValue, price, stock_quantity, productId],
     );
     res
@@ -188,7 +203,8 @@ const deleteProduct = async (req, res) => {
     }
 
     const [result] = await pool.execute(
-      `DELETE FROM products WHERE product_id = ?`,
+      ` DELETE FROM products
+        WHERE product_id = ?`,
       [productId],
     );
 

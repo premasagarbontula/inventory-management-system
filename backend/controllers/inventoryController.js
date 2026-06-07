@@ -14,7 +14,9 @@ const stockIn = async (req, res) => {
     }
 
     const [products] = await pool.execute(
-      `SELECT product_id,stock_quantity FROM products WHERE product_id=?`,
+      ` SELECT product_id,stock_quantity 
+        FROM products 
+        WHERE product_id = ? `,
       [productId],
     );
     if (products.length === 0) {
@@ -22,7 +24,8 @@ const stockIn = async (req, res) => {
     }
 
     await pool.execute(
-      `INSERT INTO inventory_transactions (product_id, transaction_type,quantity, remarks) VALUES (?,'IN',?,?)`,
+      ` INSERT INTO inventory_transactions (product_id, transaction_type,quantity, remarks) 
+        VALUES (?,'IN',?,?)`,
       [productId, quantity, remarks?.trim() ?? null],
     );
 
@@ -30,7 +33,9 @@ const stockIn = async (req, res) => {
     const currentStock = product.stock_quantity;
 
     await pool.execute(
-      `UPDATE products SET stock_quantity=? WHERE product_id=?`,
+      ` UPDATE products 
+        SET stock_quantity=? 
+        WHERE product_id=? `,
       [currentStock + Number(quantity), productId],
     );
 
@@ -60,7 +65,9 @@ const stockOut = async (req, res) => {
     }
 
     const [products] = await pool.execute(
-      `SELECT product_id,stock_quantity FROM products WHERE product_id=?`,
+      ` SELECT product_id,stock_quantity
+        FROM products
+        WHERE product_id = ? `,
       [productId],
     );
     if (products.length === 0) {
@@ -73,11 +80,14 @@ const stockOut = async (req, res) => {
       return res.status(400).json({ message: "Insufficient stock" });
     }
     await pool.execute(
-      `INSERT INTO inventory_transactions (product_id, transaction_type,quantity, remarks) VALUES (?,'OUT',?,?)`,
+      ` INSERT INTO inventory_transactions (product_id, transaction_type,quantity, remarks)
+        VALUES (?,'OUT',?,?)`,
       [productId, quantityValue, remarks?.trim() ?? null],
     );
     await pool.execute(
-      `UPDATE products SET stock_quantity=? WHERE product_id=?`,
+      ` UPDATE products
+        SET stock_quantity=? 
+        WHERE product_id = ? `,
       [currentStock - quantityValue, productId],
     );
 
@@ -102,7 +112,9 @@ const getTransactionHistory = async (req, res) => {
       return res.status(400).json({ message: "Invalid product id" });
     }
     const [products] = await pool.execute(
-      `SELECT product_id FROM products WHERE product_id = ?`,
+      ` SELECT product_id
+        FROM products
+        WHERE product_id = ? `,
       [productId],
     );
 
@@ -112,7 +124,10 @@ const getTransactionHistory = async (req, res) => {
       });
     }
     const [transactions] = await pool.execute(
-      `SELECT transaction_id,transaction_type,quantity,remarks,created_at FROM inventory_transactions WHERE product_id=? ORDER BY created_at DESC`,
+      ` SELECT transaction_id,transaction_type,quantity,remarks,created_at
+        FROM inventory_transactions 
+        WHERE product_id = ? 
+        ORDER BY created_at DESC `,
       [productId],
     );
 

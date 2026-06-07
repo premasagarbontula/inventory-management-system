@@ -17,11 +17,9 @@ const createCustomer = async (req, res) => {
 
     if (emailValue) {
       const [existingCustomers] = await pool.execute(
-        `
-          SELECT customer_id
+        ` SELECT customer_id
           FROM customers
-          WHERE email = ?
-          `,
+          WHERE email = ? `,
         [emailValue],
       );
 
@@ -33,16 +31,8 @@ const createCustomer = async (req, res) => {
     }
 
     const [result] = await pool.execute(
-      `
-      INSERT INTO customers
-      (
-        customer_name,
-        email,
-        phone,
-        address
-      )
-      VALUES (?, ?, ?, ?)
-      `,
+      ` INSERT INTO customers ( customer_name, email, phone, address )
+        VALUES (?, ?, ?, ?) `,
       [customerName, emailValue, phoneValue, addressValue],
     );
 
@@ -52,7 +42,6 @@ const createCustomer = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
     return res.status(500).json({
       message: "Server Error",
     });
@@ -62,18 +51,18 @@ const createCustomer = async (req, res) => {
 const getCustomers = async (req, res) => {
   try {
     const [customers] = await pool.execute(
-      `SELECT * FROM customers ORDER BY created_at DESC`,
+      ` SELECT * FROM customers 
+        ORDER BY created_at DESC `,
     );
-
     return res.status(200).json(customers);
   } catch (error) {
     console.error(error);
-
     return res.status(500).json({
       message: "Server Error",
     });
   }
 };
+
 const getCustomerById = async (req, res) => {
   try {
     const customerId = Number(req.params.id);
@@ -85,11 +74,9 @@ const getCustomerById = async (req, res) => {
     }
 
     const [customers] = await pool.execute(
-      `
-      SELECT *
-      FROM customers
-      WHERE customer_id = ?
-      `,
+      ` SELECT * 
+        FROM customers
+        WHERE customer_id = ? `,
       [customerId],
     );
 
@@ -132,7 +119,9 @@ const updateCustomer = async (req, res) => {
     const addressValue = address?.trim() || null;
 
     const [customers] = await pool.execute(
-      `SELECT customer_id FROM customers WHERE customer_id = ?`,
+      ` SELECT customer_id 
+        FROM customers 
+        WHERE customer_id = ? `,
       [customerId],
     );
 
@@ -144,12 +133,10 @@ const updateCustomer = async (req, res) => {
 
     if (emailValue) {
       const [existingCustomers] = await pool.execute(
-        `
-          SELECT customer_id
+        ` SELECT customer_id
           FROM customers
           WHERE email = ? 
-          AND customer_id!=?
-          `,
+          AND customer_id != ? `,
         [emailValue, customerId],
       );
 
@@ -161,7 +148,9 @@ const updateCustomer = async (req, res) => {
     }
 
     await pool.execute(
-      `UPDATE customers SET customer_name=?,email=?,phone=?,address=? WHERE customer_id=?`,
+      ` UPDATE customers
+        SET customer_name = ?,email = ?,phone = ?,address = ? 
+        WHERE customer_id=? `,
       [customerName, emailValue, phoneValue, addressValue, customerId],
     );
     return res.status(200).json({
@@ -188,7 +177,9 @@ const deleteCustomer = async (req, res) => {
     }
 
     const [customers] = await pool.execute(
-      `SELECT customer_id FROM customers WHERE customer_id = ?`,
+      ` SELECT customer_id 
+        FROM customers 
+        WHERE customer_id = ? `,
       [customerId],
     );
 

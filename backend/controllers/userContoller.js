@@ -9,7 +9,9 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "All fields required" });
     }
     const [existingUsers] = await pool.execute(
-      `SELECT user_id FROM users WHERE email=?`,
+      ` SELECT user_id
+        FROM users
+        WHERE email=?`,
       [email],
     );
     if (existingUsers.length > 0) {
