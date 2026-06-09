@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
@@ -20,6 +21,8 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use(morgan("dev"));
+
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inventory", inventoryRoutes);

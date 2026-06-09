@@ -96,4 +96,22 @@ const logoutUser = (req, res) => {
     message: "Logged out successfully",
   });
 };
-module.exports = { registerUser, loginUser, logoutUser };
+
+const getCurrentUser = async (req, res) => {
+  const [users] = await pool.execute(
+    ` SELECT user_id, username, email, role_id
+      FROM users
+      WHERE user_id = ?`,
+    [req.user.userId],
+  );
+
+  if (users.length === 0) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  return res.status(200).json(users[0]);
+};
+
+module.exports = { registerUser, loginUser, logoutUser, getCurrentUser };

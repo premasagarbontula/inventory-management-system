@@ -4,14 +4,13 @@ const {
   registerUser,
   loginUser,
   logoutUser,
+  getCurrentUser,
 } = require("../controllers/userContoller");
 const authenticateUser = require("../middleware/authMiddleware");
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
-router.get("/profile", authenticateUser, (req, res) => {
-  res.send("Profile");
-});
+router.get("/me", authenticateUser, getCurrentUser);
 
 module.exports = router;
