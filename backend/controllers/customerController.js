@@ -10,7 +10,7 @@ const createCustomer = async (req, res) => {
       });
     }
 
-    const customerName = customer_name.trim();
+    const customerName = customer_name?.trim();
     const emailValue = email?.trim() || null;
     const phoneValue = phone?.trim() || null;
     const addressValue = address?.trim() || null;
