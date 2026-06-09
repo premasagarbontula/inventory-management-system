@@ -24,6 +24,7 @@ const Products = () => {
       setProducts(data);
     } catch (error) {
       console.error(error);
+      alert(error?.response?.data?.message);
     }
   }
   useEffect(() => {
@@ -34,9 +35,9 @@ const Products = () => {
     loadProducts();
   }, []);
 
-  const handleProductForm = async (newProduct) => {
+  const handleProductForm = async (productFormData) => {
     try {
-      const { productName, sku, price, stockQuantity } = newProduct;
+      const { productName, sku, price, stockQuantity } = productFormData;
       if (
         !productName?.trim() ||
         !sku?.trim() ||
@@ -44,21 +45,21 @@ const Products = () => {
         stockQuantity === ""
       )
         return alert("All fields required to create new product");
-      const newProductBody = {
-        product_name: productName,
-        sku: sku,
+      const newProduct = {
+        product_name: productName.trim(),
+        sku: sku.trim(),
         price: price,
         stock_quantity: stockQuantity,
       };
       if (!editingProduct) {
-        const res = await API.post("/products", newProductBody);
+        const res = await API.post("/products", newProduct);
         await fetchProducts();
 
         alert(res?.data?.message);
       } else {
         const res = await API.put(
           `/products/${editingProduct.product_id}`,
-          newProductBody,
+          newProduct,
         );
         await fetchProducts();
         alert(res?.data?.message);
@@ -111,8 +112,7 @@ const Products = () => {
               <td>{new Date(product.created_at).toLocaleDateString()}</td>
               <td>
                 <button onClick={() => setEditingProduct(product)}>Edit</button>
-              </td>
-              <td>
+
                 <button onClick={() => handleDeleteProduct(product)}>
                   Delete
                 </button>
@@ -128,7 +128,7 @@ const Products = () => {
         <ProductForm
           handleProductForm={handleProductForm}
           initialValues={initialValues}
-          isEdititng={!!editingProduct}
+          isEditing={!!editingProduct}
           setEditingProduct={setEditingProduct}
         />
       </div>

@@ -1,34 +1,34 @@
 import { useEffect, useState } from "react";
 
-const ProductForm = ({
-  handleProductForm,
+const CustomerForm = ({
+  handleCustomerForm,
   initialValues,
   isEditing,
-  setEditingProduct,
+  setEditingCustomer,
 }) => {
-  const [productFormData, setProductFormData] = useState(initialValues);
+  const [customerFormData, setCustomerFormData] = useState(initialValues);
   const formInputChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setProductFormData((prev) => ({ ...prev, [name]: value }));
+    setCustomerFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {
     function initializeValues() {
-      setProductFormData(initialValues);
+      setCustomerFormData(initialValues);
     }
     initializeValues();
   }, [initialValues]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const success = await handleProductForm(productFormData);
+    const success = await handleCustomerForm(customerFormData);
     if (success) {
-      setProductFormData({
-        productName: "",
-        sku: "",
-        price: "",
-        stockQuantity: "",
+      setCustomerFormData({
+        customerName: "",
+        email: "",
+        phone: "",
+        address: "",
       });
     }
   };
@@ -37,45 +37,45 @@ const ProductForm = ({
       <form className="flex flex-col w-75 gap-2" onSubmit={handleFormSubmit}>
         <input
           type="text"
-          placeholder="Enter product name"
-          name="productName"
-          value={productFormData.productName}
+          placeholder="Enter customer name"
+          name="customerName"
+          value={customerFormData.customerName}
+          onChange={formInputChange}
+          className="border border-amber-500"
+        />
+        <input
+          type="email"
+          placeholder="Enter email"
+          name="email"
+          value={customerFormData.email}
+          onChange={formInputChange}
+          className="border border-amber-500"
+        />
+        <input
+          type="tel"
+          placeholder="Enter phone number"
+          name="phone"
+          value={customerFormData.phone}
           onChange={formInputChange}
           className="border border-amber-500"
         />
         <input
           type="text"
-          placeholder="Enter sku"
-          name="sku"
-          value={productFormData.sku}
-          onChange={formInputChange}
-          className="border border-amber-500"
-        />
-        <input
-          type="number"
-          placeholder="Enter product price"
-          name="price"
-          value={productFormData.price}
-          onChange={formInputChange}
-          className="border border-amber-500"
-        />
-        <input
-          type="number"
-          placeholder="Enter stock quantity"
-          name="stockQuantity"
-          value={productFormData.stockQuantity}
+          placeholder="Enter address"
+          name="address"
+          value={customerFormData.address}
           onChange={formInputChange}
           className="border border-amber-500"
         />
 
         <button type="submit" className="px-1 py-1 mr-2 border rounded-md">
-          {isEditing ? "Update Product" : "Create Product"}
+          {isEditing ? "Update customer" : "Create customer"}
         </button>
         {isEditing && (
           <button
             type="button"
             className="px-1 py-1 border rounded-md"
-            onClick={() => setEditingProduct(null)}
+            onClick={() => setEditingCustomer(null)}
           >
             Cancel update
           </button>
@@ -85,4 +85,4 @@ const ProductForm = ({
   );
 };
 
-export default ProductForm;
+export default CustomerForm;
