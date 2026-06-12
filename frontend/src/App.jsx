@@ -1,4 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import MainLayout from "./layouts/MainLayout";
@@ -10,9 +12,10 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 
 const appRouter = createBrowserRouter([
   {
-    path: "/login",
+    path: "/",
     element: <Login />,
   },
+
   {
     element: (
       <ProtectedRoute>
@@ -45,7 +48,12 @@ const appRouter = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={appRouter} />;
+  return (
+    <>
+      <RouterProvider router={appRouter} />
+      <Toaster position="top-center" />
+    </>
+  );
 }
 
 export default App;
