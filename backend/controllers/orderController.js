@@ -54,7 +54,7 @@ const createOrder = async (req, res) => {
       const quantity = Number(item.quantity);
 
       const [products] = await pool.execute(
-        ` SELECT product_id,price,stock_quantity
+        ` SELECT product_id,product_name,price,stock_quantity
           FROM products
           WHERE product_id = ? `,
         [productId],
@@ -70,7 +70,7 @@ const createOrder = async (req, res) => {
 
       if (product.stock_quantity < quantity) {
         return res.status(400).json({
-          message: `Insufficient stock for product ${productId}`,
+          message: `Insufficient stock for product: ${product.product_name}`,
         });
       }
     }
@@ -138,10 +138,14 @@ const createOrder = async (req, res) => {
 const getOrders = async (req, res) => {
   try {
     const [orders] = await pool.execute(
-      ` SELECT o.order_id,c.customer_name,o.order_date
-        FROM orders o JOIN customers c 
+      ` SELECT o.order_id, c.customer_name, o.order_date, COUNT(oi.order_item_id) AS item_count
+        FROM orders o
+        JOIN customers c
         ON o.customer_id = c.customer_id
-        ORDER BY o.order_date DESC `,
+        LEFT JOIN order_items oi
+        ON o.order_id = oi.order_id
+        GROUP BY o.order_id, c.customer_name, o.order_date
+        ORDER BY o.order_date DESC; `,
     );
 
     return res.status(200).json(orders);

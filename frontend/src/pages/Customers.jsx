@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import API from "../api/axios";
 import CustomerForm from "../components/CustomerForm";
+import useCustomers from "../hooks/useCustomers";
 
 const Customers = () => {
-  const [customers, setCustomers] = useState([]);
+  const { customers, fetchCustomers } = useCustomers();
   const [editingCustomer, setEditingCustomer] = useState(null);
   const initialValues = editingCustomer
     ? {
@@ -18,22 +19,6 @@ const Customers = () => {
         phone: "",
         address: "",
       };
-  async function fetchCustomers() {
-    try {
-      const { data } = await API.get("/customers");
-      setCustomers(data);
-    } catch (error) {
-      console.error(error);
-      alert(error?.response?.data?.message);
-    }
-  }
-  useEffect(() => {
-    const loadCustomers = async () => {
-      await fetchCustomers();
-    };
-
-    loadCustomers();
-  }, []);
 
   const handleCustomerForm = async (customerFormData) => {
     try {

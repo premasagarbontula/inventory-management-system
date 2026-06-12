@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import API from "../api/axios";
 import ProductForm from "../components/ProductForm";
+import useProducts from "../hooks/useProducts";
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
+  const { products, fetchProducts } = useProducts();
   const [editingProduct, setEditingProduct] = useState(null);
   const initialValues = editingProduct
     ? {
@@ -18,22 +19,6 @@ const Products = () => {
         price: "",
         stockQuantity: "",
       };
-  async function fetchProducts() {
-    try {
-      const { data } = await API.get("/products");
-      setProducts(data);
-    } catch (error) {
-      console.error(error);
-      alert(error?.response?.data?.message);
-    }
-  }
-  useEffect(() => {
-    const loadProducts = async () => {
-      await fetchProducts();
-    };
-
-    loadProducts();
-  }, []);
 
   const handleProductForm = async (productFormData) => {
     try {

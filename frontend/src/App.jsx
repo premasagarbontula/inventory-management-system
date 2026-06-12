@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import MainLayout from "./layouts/MainLayout";
 import Products from "./pages/Products";
 import Customers from "./pages/Customers";
-import Orders from "./pages/Orders";
+import Orders from "./pages/Orders/index.jsx";
 import InventoryHistory from "./pages/InventoryHistory";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
