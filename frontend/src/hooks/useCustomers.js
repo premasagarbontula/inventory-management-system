@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
+import toast from "react-hot-toast";
 
 const useCustomers = () => {
   const [customers, setCustomers] = useState([]);
@@ -9,7 +10,7 @@ const useCustomers = () => {
       setCustomers(data);
     } catch (error) {
       console.error(error);
-      alert(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to load customers");
     }
   };
 

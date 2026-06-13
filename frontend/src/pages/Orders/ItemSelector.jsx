@@ -4,13 +4,13 @@ const ItemSelector = ({
   onProductChange,
   onQuantityChange,
 }) => (
-  <div className="w-100 flex justify-around">
-    <div className="flex flex-col">
-      <h3>Products</h3>
+  <div className="grid sm:grid-cols-2 gap-4 max-w-lg">
+    <div className="flex flex-col gap-1">
+      <label className="text-xs font-medium text-slate-600">Product</label>
       <select
-        className="border"
         value={item.productId}
         onChange={onProductChange}
+        className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400"
       >
         <option value="">Select Product</option>
         {products.map((p) => (
@@ -20,15 +20,16 @@ const ItemSelector = ({
         ))}
       </select>
     </div>
-    <div className="flex flex-col">
-      <h3>Quantity</h3>
+
+    <div className="flex flex-col gap-1">
+      <label className="text-xs font-medium text-slate-600">Quantity</label>
       <input
         type="number"
         min="1"
         value={item.quantity}
-        placeholder="Enter quantity"
-        className="border"
+        placeholder="e.g. 5"
         onChange={onQuantityChange}
+        className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400"
       />
     </div>
   </div>

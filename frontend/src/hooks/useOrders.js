@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
+import toast from "react-hot-toast";
 
 const useOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -9,7 +10,7 @@ const useOrders = () => {
       setOrders(data);
     } catch (error) {
       console.error(error);
-      alert(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to load orders");
     }
   };
 

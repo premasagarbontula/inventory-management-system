@@ -1,34 +1,60 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import API from "../api/axios";
 import { useAuth } from "../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
+
   const navigate = useNavigate();
+  if (auth?.user) return <Navigate to="/dashboard" replace />;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedEmail) {
+      toast.error("Email is required");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      toast.error("Enter a valid email");
+      return;
+    }
+    if (!trimmedPassword) {
+      toast.error("Password is required");
+      return;
+    }
+    if (trimmedPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
     try {
-      const { data } = await API.post("/users/login", { email, password });
+      const { data } = await API.post("/users/login", {
+        email: trimmedEmail,
+        password: trimmedPassword,
+      });
       setAuth({ user: data.user, loading: false });
       toast.success(data.message);
       navigate("/dashboard");
     } catch (error) {
-      console.log(error);
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <main className="relative min-h-screen bg-[url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920')] flex items-center justify-center bg-cover bg-center px-4">
-      <section className="relative bg-white shadow-lg rounded-xl p-6 sm:p-8 w-full max-w-xs sm:max-w-sm">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 text-center">
+    <main className="min-h-screen bg-[url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920')] flex items-center justify-center bg-cover bg-center px-4">
+      <section className="bg-white shadow-lg rounded-xl p-6 sm:p-8 w-full max-w-xs sm:max-w-sm">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 mb-6 text-center">
           Welcome Back
         </h1>
 
@@ -36,7 +62,7 @@ const Login = () => {
           <div className="flex flex-col gap-1">
             <label
               htmlFor="email"
-              className="text-sm font-medium text-gray-600"
+              className="text-xs font-medium text-slate-600"
             >
               Email
             </label>
@@ -46,15 +72,14 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="border border-gray-300 rounded-lg px-3 py-2 sm:px-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
+              className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400"
             />
           </div>
 
           <div className="flex flex-col gap-1">
             <label
               htmlFor="password"
-              className="text-sm font-medium text-gray-600"
+              className="text-xs font-medium text-slate-600"
             >
               Password
             </label>
@@ -65,13 +90,12 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 sm:px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                required
+                className="w-full rounded-md border border-slate-200 px-3 py-2 pr-10 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -80,7 +104,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors duration-200 cursor-pointer text-sm sm:text-base"
+            className="mt-2 px-4 py-2 rounded-md bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors"
           >
             Login
           </button>

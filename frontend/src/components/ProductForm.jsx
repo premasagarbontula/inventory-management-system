@@ -1,4 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+const fields = [
+  {
+    label: "Product Name",
+    name: "productName",
+    type: "text",
+    placeholder: "e.g. Wireless Mouse",
+  },
+  { label: "SKU", name: "sku", type: "text", placeholder: "e.g. WM-001" },
+  {
+    label: "Price (₹)",
+    name: "price",
+    type: "number",
+    placeholder: "e.g. 499",
+  },
+  {
+    label: "Stock Qty",
+    name: "stockQuantity",
+    type: "number",
+    placeholder: "e.g. 50",
+  },
+];
+
+const empty = { productName: "", sku: "", price: "", stockQuantity: "" };
 
 const ProductForm = ({
   handleProductForm,
@@ -6,82 +30,56 @@ const ProductForm = ({
   isEditing,
   setEditingProduct,
 }) => {
-  const [productFormData, setProductFormData] = useState(initialValues);
-  const formInputChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setProductFormData((prev) => ({ ...prev, [name]: value }));
+  const [formData, setFormData] = useState(initialValues);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    function initializeValues() {
-      setProductFormData(initialValues);
-    }
-    initializeValues();
-  }, [initialValues]);
-
-  const handleFormSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await handleProductForm(productFormData);
-    if (success) {
-      setProductFormData({
-        productName: "",
-        sku: "",
-        price: "",
-        stockQuantity: "",
-      });
-    }
+    const success = await handleProductForm(formData);
+    if (success) setFormData(empty);
   };
-  return (
-    <div>
-      <form className="flex flex-col w-75 gap-2" onSubmit={handleFormSubmit}>
-        <input
-          type="text"
-          placeholder="Enter product name"
-          name="productName"
-          value={productFormData.productName}
-          onChange={formInputChange}
-          className="border border-amber-500"
-        />
-        <input
-          type="text"
-          placeholder="Enter sku"
-          name="sku"
-          value={productFormData.sku}
-          onChange={formInputChange}
-          className="border border-amber-500"
-        />
-        <input
-          type="number"
-          placeholder="Enter product price"
-          name="price"
-          value={productFormData.price}
-          onChange={formInputChange}
-          className="border border-amber-500"
-        />
-        <input
-          type="number"
-          placeholder="Enter stock quantity"
-          name="stockQuantity"
-          value={productFormData.stockQuantity}
-          onChange={formInputChange}
-          className="border border-amber-500"
-        />
 
-        <button type="submit" className="px-1 py-1 mr-2 border rounded-md">
-          {isEditing ? "Update Product" : "Create Product"}
+  return (
+    <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-4">
+      {fields.map(({ label, name, type, placeholder }) => (
+        <div key={name} className="flex flex-col gap-1">
+          <label htmlFor={name} className="text-xs font-medium text-slate-600">
+            {label}
+          </label>
+          <input
+            id={name}
+            type={type}
+            name={name}
+            placeholder={placeholder}
+            value={formData[name]}
+            onChange={handleChange}
+            className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400"
+          />
+        </div>
+      ))}
+
+      <div className="sm:col-span-2 flex flex-wrap gap-3 pt-2">
+        <button
+          type="submit"
+          className="px-4 py-2 rounded-md bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors"
+        >
+          {isEditing ? "Update Product" : "Add Product"}
         </button>
         {isEditing && (
           <button
             type="button"
-            className="px-1 py-1 border rounded-md"
             onClick={() => setEditingProduct(null)}
+            className="px-4 py-2 rounded-md border border-slate-200 text-sm text-slate-600 hover:bg-slate-100 transition-colors"
           >
-            Cancel update
+            Cancel
           </button>
         )}
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 

@@ -7,6 +7,8 @@ import OrdersTable from "./OrdersTable";
 import OrderDetails from "./OrderDetails";
 import ItemSelector from "./ItemSelector";
 import OrderItemsList from "./OrderItemsList";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import toast from "react-hot-toast";
 
 const Orders = () => {
   const [item, setItem] = useState({
@@ -19,7 +21,7 @@ const Orders = () => {
   const [orderItems, setOrderItems] = useState([]);
   const [viewedOrder, setViewedOrder] = useState(null);
 
-  const { orders, fetchOrders } = useOrders();
+  const { orders, fetchOrders, loading } = useOrders();
   const { products } = useProducts();
   const { customers } = useCustomers();
 
@@ -40,12 +42,26 @@ const Orders = () => {
   };
 
   const handleAddItem = () => {
-    if (item.productName === "" || !item.quantity || item.quantity <= 0)
-      return alert("Select both Product and Quantity");
+    const qty = Number(item.quantity);
+
+    if (!item.productName) {
+      toast.error("Select a product");
+      return;
+    }
+    if (!item.quantity || qty <= 0) {
+      toast.error("Quantity must be greater than 0");
+      return;
+    }
+    if (!Number.isInteger(qty)) {
+      toast.error("Quantity must be a whole number");
+      return;
+    }
 
     const alreadyAdded = orderItems.some((i) => i.productId === item.productId);
-    if (alreadyAdded && editingItemIndex === null)
-      return alert("Product already added");
+    if (alreadyAdded && editingItemIndex === null) {
+      toast.error("Product already added");
+      return;
+    }
 
     if (editingItemIndex !== null) {
       setOrderItems((prev) =>
@@ -72,13 +88,19 @@ const Orders = () => {
       const { data } = await API.get(`/orders/${orderId}`);
       setViewedOrder(data);
     } catch (error) {
-      alert(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to load order");
     }
   };
 
   const handleCreateOrder = async () => {
-    if (!customerId) return alert("Select a customer");
-    if (orderItems.length === 0) return alert("Add at least one item");
+    if (!customerId) {
+      toast.error("Select a customer");
+      return;
+    }
+    if (orderItems.length === 0) {
+      toast.error("Add at least one item");
+      return;
+    }
     try {
       const { data } = await API.post("/orders", {
         customer_id: customerId,
@@ -90,25 +112,28 @@ const Orders = () => {
       await fetchOrders();
       setOrderItems([]);
       setCustomerId("");
-      setItem({
-        productId: "",
-        productName: "",
-        quantity: "",
-      });
-
+      setItem({ productId: "", productName: "", quantity: "" });
       setEditingItemIndex(null);
-      alert(data?.message);
+      toast.success(data?.message);
     } catch (error) {
-      alert(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to create order");
     }
   };
+  if (loading) return <LoadingSpinner />;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Orders</h1>
+    <section>
+      <header className="mb-6">
+        <h1 className="text-2xl font-bold text-slate-800">Orders</h1>
+        <p className="text-sm text-slate-500 mt-1">
+          View and manage customer orders
+        </p>
+      </header>
 
+      {/* Orders Table */}
       <OrdersTable orders={orders} onView={handleViewOrder} />
 
+      {/* Order Details */}
       {viewedOrder && (
         <OrderDetails
           order={viewedOrder}
@@ -116,15 +141,27 @@ const Orders = () => {
         />
       )}
 
-      <div>
-        <h2 className="font-semibold text-xl mt-6 mb-2">Create Order</h2>
-        <div className="mb-3">
-          <label htmlFor="customers">Customer:</label>
+      {/* Create Order */}
+      <section className="rounded-lg border border-slate-200 bg-white shadow-sm p-6 mt-8">
+        <header className="mb-4">
+          <h2 className="text-lg font-semibold text-slate-800">Create Order</h2>
+          <p className="text-sm text-slate-500 mt-0.5">
+            Select a customer and add products
+          </p>
+        </header>
+
+        <div className="flex flex-col gap-1 mb-4 max-w-xs">
+          <label
+            htmlFor="customers"
+            className="text-xs font-medium text-slate-600"
+          >
+            Customer
+          </label>
           <select
             id="customers"
             value={customerId}
-            className="border"
             onChange={(e) => setCustomerId(e.target.value)}
+            className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400"
           >
             <option value="">Select Customer</option>
             {customers.map((c) => (
@@ -142,6 +179,13 @@ const Orders = () => {
           onQuantityChange={handleQuantitySelection}
         />
 
+        <button
+          onClick={handleAddItem}
+          className="mt-4 px-4 py-2 rounded-md bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors"
+        >
+          {editingItemIndex !== null ? "Update Item" : "Add Item"}
+        </button>
+
         {orderItems.length > 0 && (
           <OrderItemsList
             orderItems={orderItems}
@@ -150,22 +194,17 @@ const Orders = () => {
           />
         )}
 
-        <button
-          onClick={handleAddItem}
-          className="px-1 py-1 bg-blue-400 text-white rounded-lg mt-5 cursor-pointer"
-        >
-          {editingItemIndex !== null ? "Update Item" : "Add Item"}
-        </button>
-
-        <button
-          onClick={handleCreateOrder}
-          className="px-1 py-1 ml-2 bg-blue-400 text-white rounded-lg mt-5 cursor-pointer disabled:bg-gray-300 disabled:text-black disabled:cursor-not-allowed"
-          disabled={!customerId || orderItems.length === 0}
-        >
-          Create Order
-        </button>
-      </div>
-    </div>
+        <div className="mt-6 pt-4 border-t border-slate-100">
+          <button
+            onClick={handleCreateOrder}
+            disabled={!customerId || orderItems.length === 0}
+            className="px-4 py-2 rounded-md bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+          >
+            Create Order
+          </button>
+        </div>
+      </section>
+    </section>
   );
 };
 
