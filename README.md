@@ -313,7 +313,7 @@ npm run dev
 
 ### Inventory
 
-## ![Inventory](./screenshots/inventory.png)
+![Inventory](./screenshots/inventory.png)
 
 ## 🎯 Learning Outcomes
 
