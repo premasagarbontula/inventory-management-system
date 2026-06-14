@@ -32,10 +32,14 @@ const Customers = () => {
       return false;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return toast.error("Enter a valid email");
-    if (phone.trim().length < 10)
-      return toast.error("Enter a valid phone number");
-
+    if (!emailRegex.test(email)) {
+      toast.error("Enter a valid email");
+      return false;
+    }
+    if (phone.trim().length < 10) {
+      toast.error("Enter a valid phone number");
+      return false;
+    }
     const payload = {
       customer_name: customerName.trim(),
       email: email.trim(),

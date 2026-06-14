@@ -143,7 +143,7 @@ const Products = () => {
                   <td className="px-4 py-3">
                     <span
                       className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        product.stock_quantity <= 5
+                        product.stock_quantity <= 10
                           ? "bg-red-100 text-red-600"
                           : "bg-green-100 text-green-700"
                       }`}

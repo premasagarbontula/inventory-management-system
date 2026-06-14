@@ -291,16 +291,29 @@ npm run dev
 
 ## 📷 Screenshots
 
-Add screenshots of:
+### Login
 
-- Login Page
-- Dashboard
-- Products Page
-- Customers Page
-- Orders Page
-- Inventory Management Page
+![Login](./screenshots/login.png)
 
----
+### Dashboard
+
+![Dashboard](./screenshots/dashboard.png)
+
+### Products
+
+![Products](./screenshots/products.png)
+
+### Customers
+
+![Customers](./screenshots/customers.png)
+
+### Orders
+
+![Orders](./screenshots/orders.png)
+
+### Inventory
+
+## ![Inventory](./screenshots/inventory.png)
 
 ## 🎯 Learning Outcomes
 
