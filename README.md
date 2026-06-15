@@ -1,6 +1,36 @@
 # 📦 Inventory Management System
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success)](https://inventory-management-system-five-ivory.vercel.app)
+
 A full-stack Inventory Management System built using **React, Vite, Node.js, Express, and MySQL**. The application helps businesses manage products, customers, orders, stock movements, and inventory transactions through a modern web interface.
+
+---
+
+## 📷 Screenshots
+
+### Login
+
+![Login](./screenshots/login.png)
+
+### Dashboard
+
+![Dashboard](./screenshots/dashboard.png)
+
+### Products
+
+![Products](./screenshots/products.png)
+
+### Customers
+
+![Customers](./screenshots/customers.png)
+
+### Orders
+
+![Orders](./screenshots/orders.png)
+
+### Inventory
+
+![Inventory](./screenshots/inventory.png)
 
 ---
 
@@ -288,32 +318,6 @@ npm run dev
 ```
 
 ---
-
-## 📷 Screenshots
-
-### Login
-
-![Login](./screenshots/login.png)
-
-### Dashboard
-
-![Dashboard](./screenshots/dashboard.png)
-
-### Products
-
-![Products](./screenshots/products.png)
-
-### Customers
-
-![Customers](./screenshots/customers.png)
-
-### Orders
-
-![Orders](./screenshots/orders.png)
-
-### Inventory
-
-![Inventory](./screenshots/inventory.png)
 
 ## 🎯 Learning Outcomes
 
