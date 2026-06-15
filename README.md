@@ -335,6 +335,19 @@ This project demonstrates:
 
 ---
 
+## Deployment
+
+- Frontend: Vercel
+- Backend: Render
+- Database: TiDB Cloud
+
+## Live Demo
+
+Frontend: https://inventory-management-system-five-ivory.vercel.app
+
+Backend API: https://inventory-management-system-lmrc.onrender.com
+---
+
 ## 👨‍💻 Author
 
 **Prema Sagar Bontula**
