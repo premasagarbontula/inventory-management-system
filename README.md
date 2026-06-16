@@ -1,6 +1,9 @@
 # 📦 Inventory Management System
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-success)](https://inventory-management-system-five-ivory.vercel.app)
+## Demo Login Credentials:
+Email: demo@example.com
+Password: demo123
 
 A full-stack Inventory Management System built using **React, Vite, Node.js, Express, and MySQL**. The application helps businesses manage products, customers, orders, stock movements, and inventory transactions through a modern web interface.
 
