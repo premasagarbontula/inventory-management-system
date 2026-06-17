@@ -1,11 +1,11 @@
 # 📦 Inventory Management System
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-success)](https://inventory-management-system-five-ivory.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success)](https://inventory-management-system-five-ivory.vercel.app/)
 
 ## Demo Credentials
 
-**Email:** demo@example.com  
-**Password:** demo123
+**Email:** test@user.com  
+**Password:** Test@1234
 > Note: Demo account has limited permissions and is intended for evaluation purposes.
 
 A full-stack **Inventory Management System** built using **React.js, Node.js, Express.js, and TiDB Cloud (MySQL-compatible database)**. The application helps businesses manage products, customers, orders, inventory transactions, and stock movements through a modern web interface.
