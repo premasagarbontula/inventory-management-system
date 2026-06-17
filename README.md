@@ -351,6 +351,7 @@ This project demonstrates:
 Frontend: https://inventory-management-system-five-ivory.vercel.app
 
 Backend API: https://inventory-management-system-lmrc.onrender.com
+
 ---
 
 ## 👨‍💻 Author
